@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Map API Project</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/zipform.css" />
+    <link rel="stylesheet" href="./css/weather-container.css" />
+    <script
+      src="https://kit.fontawesome.com/78750ef449.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div id="zipCodeForm" class="sidebar-btn">
+          <h3>#</h3>
+        </div>
+        <div id="addMarker" class="sidebar-btn tooltip">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div id="listWeatherLocations" class="sidebar-btn">
+          <h3><i class="fas fa-angle-double-right"></i></h3>
+        </div>
+      </div>
+
+      <div id="map"></div>
+
+      <!--  Selection Form -->
+      <div id="zipForm" class="form-container">
+        <div class="input-container">
+          <input
+            id="zipSubmitInput"
+            class="input-text"
+            type="text"
+            placeholder="Enter zip code"
+          />
+          <button id="zipSubmitBtn" class="btn">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="weatherForm" class="weather-container">
+        <div class="location-container">
+          <!-- <div class="weather-node">
+            <h1>Weather Node</h1>
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+    <!-- Load Leaflet from CDN-->
+    <script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet"></script>
+
+    <!-- Esri Leaflet Geocoder -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css"
+    />
+    <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
+
+    <script src="./js/map.js"></script>
+    <script src="./js/sidebar.js"></script>
+    <script type="module" src="./js/index.js"></script>
+  </body>
+</html>

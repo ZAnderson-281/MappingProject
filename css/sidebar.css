@@ -1,0 +1,40 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+
+  align-content: center;
+
+  width: 8%;
+  min-width: 50px;
+  height: 100%;
+  background-color: #46468a;
+}
+
+.sidebar-btn {
+  display: flex;
+  flex-direction: column;
+
+  align-content: center;
+  justify-content: center;
+
+  text-align: center;
+
+  width: 100%;
+  height: 60px;
+  margin: 0.3rem 0rem;
+  background-color: rgb(70, 70, 138);
+  /* background-color: rgb(64, 109, 146); */
+  color: white;
+}
+
+.sidebar-btn:hover {
+  cursor: pointer;
+  background-color: #406d92;
+}
+.sidebar-btn-select {
+  background-color: rgb(64, 109, 146);
+}
+
+#listWeatherLocations {
+  margin-top: auto;
+}

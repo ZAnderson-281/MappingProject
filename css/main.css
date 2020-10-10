@@ -1,0 +1,47 @@
+/* Zero Out */
+* {
+  padding: 0rem;
+  margin: 0rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  align-content: center;
+  justify-content: center;
+
+  height: 100vh;
+  width: 100vw;
+}
+.btn {
+  border: none;
+  outline-style: none;
+  border-radius: 50px;
+  padding: 0.5rem;
+  background: none;
+}
+
+.btn:hover {
+  cursor: pointer;
+  background-color: rgba(35, 185, 255, 0.6);
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  width: 60%;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+i {
+  color: white;
+}
+
+#map {
+  width: 92%;
+  height: 100%;
+  z-index: 1;
+}
