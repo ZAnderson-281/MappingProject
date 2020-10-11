@@ -10,7 +10,7 @@ export class Map {
     // Marker object and collectors
     this.index = 0;
     this.markers = {
-      defaultLatLong: [51.505, -91.8318],
+      defaultLatLong: this.map.getCenter(),
       markers: [],
       latlng: [],
       addresses: [],
@@ -21,11 +21,17 @@ export class Map {
   // Create Map
   createMap() {
     this.map.setView([37.9643, -91.8318], 4);
+    this.map.on("zoomend", this.updateMapCenter.bind(this));
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
+  }
+
+  // After a zoom is compleated or halted recalculate the map center
+  updateMapCenter() {
+    this.markers.defaultLatLong = this.map.getCenter();
   }
 
   // Adds a marker at a lng and lat cord
@@ -44,9 +50,9 @@ export class Map {
     this.markers.markers.push(marker);
     // Push the array activeIndex
     this.index = this.markers.markers.indexOf(marker);
-    // Push the lat and lang
+    // Add an id to the marker icon
     this.markers.markers[this.index]._icon.id = this.index;
-
+    // Push the lat and lang
     this.markers.latlng.push(marker._latlng);
     // Get the address information
     this.getAddress(this.markers.latlng[this.index]);
