@@ -64,7 +64,6 @@ export class Sidebar {
     const zipcodeConverted = await this._mapInstance.convertZipCode(zipcode);
 
     const markerData = await this._mapInstance.addMarker(zipcodeConverted);
-    // this.createWeatherCard.bind(markerData);
     console.log(markerData);
     this.createWeatherCard(markerData);
   }
@@ -73,10 +72,11 @@ export class Sidebar {
   handleMarkerUpdate(event) {
     const map = document.querySelector("#map");
     if (map.contains(event.target)) {
-      console.log(event.target.id);
-      this.htmlNodes.weatherCard.weatherCardInstances[
-        event.target.id
-      ].updateCard();
+      if (event.target.classList.contains("leaflet-marker-icon")) {
+        this.htmlNodes.weatherCard.weatherCardInstances[
+          event.target.id
+        ].updateCard();
+      }
     }
   }
 
