@@ -45,6 +45,8 @@ export class Map {
     // Push the array activeIndex
     this.index = this.markers.markers.indexOf(marker);
     // Push the lat and lang
+    this.markers.markers[this.index]._icon.id = this.index;
+
     this.markers.latlng.push(marker._latlng);
     // Get the address information
     this.getAddress(this.markers.latlng[this.index]);

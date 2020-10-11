@@ -11,19 +11,13 @@ export class Sidebar {
       },
       weatherCard: {
         weatherCardInstances: [],
-        weatherCardData: [],
       },
     };
 
     document.body.addEventListener("click", this.handleMarkerUpdate.bind(this));
   }
 
-  // handle add marker
-  handleAddMarker() {
-    const markerData = this._mapInstance.addMarker(0);
-    this.createWeatherCard(markerData);
-  }
-
+  // Handles the toggleing of the zip code entry form
   handleEnterZip() {
     if (this.htmlNodes.active.zipEntry === false) {
       document
@@ -40,6 +34,7 @@ export class Sidebar {
     }
   }
 
+  // Handles the toggleing of the weather card container
   handleViewLocations() {
     if (this.htmlNodes.active.listWeather === false) {
       document
@@ -56,25 +51,36 @@ export class Sidebar {
     }
   }
 
+  // Handles the addition of a zipcodeless marker
+  handleAddMarker() {
+    const markerData = this._mapInstance.addMarker(0);
+    this.createWeatherCard(markerData);
+  }
+
+  // Handles the creation of a marker with a zip code
   async handleSubmitZipcode() {
     // Get the entered zip code
     const zipcode = document.querySelector("#zipSubmitInput").value;
     const zipcodeConverted = await this._mapInstance.convertZipCode(zipcode);
 
     const markerData = await this._mapInstance.addMarker(zipcodeConverted);
+    // this.createWeatherCard.bind(markerData);
+    console.log(markerData);
     this.createWeatherCard(markerData);
   }
 
+  // Handles the updating of markers
   handleMarkerUpdate(event) {
     const map = document.querySelector("#map");
     if (map.contains(event.target)) {
-      if (!this.dragging) {
-        console.log();
-        this.htmlNodes.weatherCard.weatherCardInstances[0].updateCard();
-      }
+      console.log(event.target.id);
+      this.htmlNodes.weatherCard.weatherCardInstances[
+        event.target.id
+      ].updateCard();
     }
   }
 
+  // Creates the weather card and appends the instance to an array
   createWeatherCard(data) {
     const parent = document.querySelector(".location-container");
     const wcInstance = new WeatherCard(parent, data);
@@ -82,31 +88,34 @@ export class Sidebar {
   }
 }
 
-// WEATHER CARD
-class WeatherCard {
+// WEATHER CARD CLASS
+class WeatherCard extends Sidebar {
   constructor(parent, data) {
-    this.card;
-    this.addresses;
-
-    this.parent = parent;
+    super();
     this.index = data.index;
     this.markerData = data.markerData;
+    this.parent = parent;
 
     this.createWeatherCard();
+    this.handleViewLocations();
   }
 
-  async createWeatherCard() {
+  // Creates the weather card
+  createWeatherCard() {
     this.card = document.createElement("DIV");
     this.header = document.createElement("DIV");
     this.weatherContainer = document.createElement("DIV");
 
     this.card.classList.add("weather-node");
+    this.card.id = this.index;
+
     this.addAddress();
     this.addWeatherData();
 
     this.parent.appendChild(this.card);
   }
 
+  // Adds the address data to the card
   addAddress() {
     setTimeout(() => {
       this.header.innerHTML = "";
@@ -118,6 +127,7 @@ class WeatherCard {
     }, 1000);
   }
 
+  // a\Adds the weather data to the card
   addWeatherData() {
     setTimeout(() => {
       this.weatherContainer.innerHTML = "";
@@ -125,12 +135,15 @@ class WeatherCard {
 
       const temp = document.createElement("p");
       temp.innerHTML = `Temperature: ${weather.temperature}`;
+      const hum = document.createElement("p");
+      hum.innerHTML = `Humidity: ${weather.humidity}`;
       const dew = document.createElement("p");
       dew.innerHTML = `Dew point: ${weather.dewPoint}`;
       const windSpeed = document.createElement("p");
       windSpeed.innerHTML = `Wind speed: ${weather.windSpeed}`;
 
       this.weatherContainer.appendChild(temp);
+      this.weatherContainer.appendChild(hum);
       this.weatherContainer.appendChild(dew);
       this.weatherContainer.appendChild(windSpeed);
       this.card.appendChild(this.weatherContainer);
@@ -139,11 +152,13 @@ class WeatherCard {
     }, 1000);
   }
 
+  // Updates the weather card information
   updateCard() {
     this.addAddress();
     this.addWeatherData();
   }
 
+  // Destroys the weather card
   destroyWeatherCard() {
     this.parent.removeChild(this.card);
     console.log("removed");
