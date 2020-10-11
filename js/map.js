@@ -1,11 +1,13 @@
 export class Map {
   constructor() {
+    // Leaflet
     this.map = L.map("map");
-
     this.geocodeService = new L.esri.Geocoding.geocodeService();
 
+    // On creation create map instance
     this.createMap();
 
+    // Marker object and collectors
     this.index = 0;
     this.markers = {
       defaultLatLong: [51.505, -91.8318],
@@ -16,6 +18,7 @@ export class Map {
     };
   }
 
+  // Create Map
   createMap() {
     this.map.setView([37.9643, -91.8318], 4);
 
@@ -37,53 +40,56 @@ export class Map {
       .on("dragend", this.markerDrag.bind(this))
       .on("click", this.markerClick.bind(this));
 
+    // Push marker instance
     this.markers.markers.push(marker);
-    this.markers.latlng.push(marker._latlng);
+    // Push the array activeIndex
     this.index = this.markers.markers.indexOf(marker);
-
+    // Push the lat and lang
+    this.markers.latlng.push(marker._latlng);
+    // Get the address information
+    this.getAddress(this.markers.latlng[this.index]);
+    // Get weather Information
+    this.getWeather(this.markers.latlng[this.index]);
+    // Fly to marker
     this.map.flyTo(this.markers.latlng[this.index], 15);
-    this.getAddress();
   }
 
   markerDrag(e) {
     this.index = this.markers.markers.indexOf(e.target);
-    this.markers.latlng[this.index] = e.target._latlng;
-    this.getAddress();
+    this.getAddress(e.target._latlng);
+    this.getWeather(e.target._latlng);
   }
 
   markerClick(e) {
     this.index = this.markers.markers.indexOf(e.target);
-    this.getAddress();
+    this.getAddress(e.target._latlng);
+    this.getWeather(e.target._latlng);
   }
 
-  getAddress() {
-    const marker = this.markers.markers[this.index];
+  // Sets the address information
+  async getAddress(latlng) {
+    const lat = latlng.lat;
+    const lng = latlng.lng;
     this.geocodeService
       .reverse()
-      .latlng(marker._latlng)
+      .latlng([lat, lng])
       .run((error, result) => {
-        console.log(result);
-        this.markers.markers.addresses.push(result.address);
-        marker.bindPopup(result.address.Match_addr).openPopup();
+        console.log(result.address);
+        this.markers.addresses[this.index] = result.address;
       });
   }
 
-  createData(zip) {
-    this.getInfo(zip);
+  // Get weather for a lat lang and push
+  async getWeather(latlng) {
+    const weatherData = await fetch(
+      `http://api.geonames.org/findNearByWeatherJSON?lat=${latlng.lat}&lng=${latlng.lng}&username=ZAnderson281`
+    ).then((data) => data.json());
+    console.log(weatherData);
+
+    this.markers.weather[this.index] = weatherData;
   }
 
-  async getInfo(zipCode) {
-    const zipCodeFetch = await fetch(
-      `http://api.geonames.org/postalCodeLookupJSON?postalcode=${zipCode}&country=US&username=ZAnderson281`
-    );
-    const data = await zipCodeFetch.json();
-
-    // Get the weather data
-    const weatherFetch = await fetch(
-      `http://api.geonames.org/findNearByWeatherJSON?lat=${data.postalcodes[0].lat}&lng=${data.postalcodes[0].lng}&username=ZAnderson281`
-    );
-    const weatherData = await weatherFetch.json();
-    this.markers.weather = weatherData;
-    console.log(this.markers.weather);
+  get getMarkerData() {
+    return this.markers;
   }
 }

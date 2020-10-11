@@ -15,13 +15,9 @@ export class Sidebar {
     };
   }
 
+  // handle add marker
   handleAddMarker() {
     this._mapInstance.addMarker(0);
-    this._mapInstance.createData.bind(this._mapInstance);
-    this.htmlNodes.weatherCard.weatherCardData.push(
-      this._mapInstance.createData()
-    );
-    this.createWeatherCard(this.htmlNodes.weatherCard.weatherCardData);
   }
 
   handleEnterZip() {
@@ -56,19 +52,9 @@ export class Sidebar {
     }
   }
 
-  async handleSubmitZipcode() {
+  handleSubmitZipcode() {
+    // Get the entered zip code
     const zipcode = document.querySelector("#zipSubmitInput").value;
-    // this._mapInstance.getZipcodeInfo(zipcode);
-    this._mapInstance.createData.bind(this._mapInstance);
-    await this._mapInstance.getInfo(zipcode);
-    this.htmlNodes.weatherCard.weatherCardData.push(
-      this._mapInstance.markers.weather
-    );
-
-    console.log(this.htmlNodes.weatherCard);
-    console.log(this._mapInstance.markers.weather);
-
-    // this.createWeatherCard();
   }
 
   createWeatherCard() {
@@ -83,18 +69,26 @@ export class Sidebar {
 
 // WEATHER CARD
 class WeatherCard {
-  constructor(parent, weatherData) {
+  constructor(parent, data) {
     this.parent = parent;
     this.card;
-    this._weatherData = weatherData;
+    this._weatherData = data.weather;
+    this._addrData = data.addr;
     this.createWeatherCard();
   }
 
   createWeatherCard() {
     this.card = document.createElement("DIV");
     this.card.classList.add("weather-node");
+
     const button = document.createElement("BUTTON");
     button.addEventListener("click", this.destroyWeatherCard.bind(this));
+
+    const header = document.createElement("H3");
+
+    console.log({ weatherData: this._weatherData });
+    header.innerHTML = this._weatherData;
+
     this.card.appendChild(button);
     this.parent.appendChild(this.card);
   }
