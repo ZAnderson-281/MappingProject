@@ -1,6 +1,7 @@
 export class Sidebar {
   constructor(mapInstance) {
     this._mapInstance = mapInstance;
+
     this.htmlNodes = {
       listWeather: document.querySelector("#weatherForm"),
       zipEntry: document.querySelector("#zipForm"),
@@ -52,9 +53,11 @@ export class Sidebar {
     }
   }
 
-  handleSubmitZipcode() {
+  async handleSubmitZipcode() {
     // Get the entered zip code
     const zipcode = document.querySelector("#zipSubmitInput").value;
+    const zipcodeConverted = await this._mapInstance.convertZipCode(zipcode);
+    this._mapInstance.addMarker(zipcodeConverted);
   }
 
   createWeatherCard() {

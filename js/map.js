@@ -67,7 +67,7 @@ export class Map {
   }
 
   // Sets the address information
-  async getAddress(latlng) {
+  getAddress(latlng) {
     const lat = latlng.lat;
     const lng = latlng.lng;
     this.geocodeService
@@ -87,6 +87,19 @@ export class Map {
     console.log(weatherData);
 
     this.markers.weather[this.index] = weatherData;
+  }
+
+  async convertZipCode(zipCode) {
+    const zipCodeData = await fetch(
+      `http://api.geonames.org/postalCodeLookupJSON?postalcode=${zipCode}&country=US&username=ZAnderson281`
+    ).then((data) => data.json());
+
+    const latlng = {
+      lat: zipCodeData.postalcodes[0].lat,
+      lng: zipCodeData.postalcodes[0].lng,
+    };
+
+    return latlng;
   }
 
   get getMarkerData() {
