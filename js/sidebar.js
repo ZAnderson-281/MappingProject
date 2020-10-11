@@ -14,11 +14,14 @@ export class Sidebar {
         weatherCardData: [],
       },
     };
+
+    document.body.addEventListener("click", this.handleMarkerUpdate.bind(this));
   }
 
   // handle add marker
   handleAddMarker() {
-    this._mapInstance.addMarker(0);
+    const markerData = this._mapInstance.addMarker(0);
+    this.createWeatherCard(markerData);
   }
 
   handleEnterZip() {
@@ -57,15 +60,24 @@ export class Sidebar {
     // Get the entered zip code
     const zipcode = document.querySelector("#zipSubmitInput").value;
     const zipcodeConverted = await this._mapInstance.convertZipCode(zipcode);
-    this._mapInstance.addMarker(zipcodeConverted);
+
+    const markerData = await this._mapInstance.addMarker(zipcodeConverted);
+    this.createWeatherCard(markerData);
   }
 
-  createWeatherCard() {
+  handleMarkerUpdate(event) {
+    const map = document.querySelector("#map");
+    if (map.contains(event.target)) {
+      if (!this.dragging) {
+        console.log();
+        this.htmlNodes.weatherCard.weatherCardInstances[0].updateCard();
+      }
+    }
+  }
+
+  createWeatherCard(data) {
     const parent = document.querySelector(".location-container");
-    const wcInstance = new WeatherCard(
-      parent,
-      this.htmlNodes.weatherCard.weatherCardData
-    );
+    const wcInstance = new WeatherCard(parent, data);
     this.htmlNodes.weatherCard.weatherCardInstances.push(wcInstance);
   }
 }
@@ -73,27 +85,63 @@ export class Sidebar {
 // WEATHER CARD
 class WeatherCard {
   constructor(parent, data) {
-    this.parent = parent;
     this.card;
-    this._weatherData = data.weather;
-    this._addrData = data.addr;
+    this.addresses;
+
+    this.parent = parent;
+    this.index = data.index;
+    this.markerData = data.markerData;
+
     this.createWeatherCard();
   }
 
-  createWeatherCard() {
+  async createWeatherCard() {
     this.card = document.createElement("DIV");
+    this.header = document.createElement("DIV");
+    this.weatherContainer = document.createElement("DIV");
+
     this.card.classList.add("weather-node");
+    this.addAddress();
+    this.addWeatherData();
 
-    const button = document.createElement("BUTTON");
-    button.addEventListener("click", this.destroyWeatherCard.bind(this));
-
-    const header = document.createElement("H3");
-
-    console.log({ weatherData: this._weatherData });
-    header.innerHTML = this._weatherData;
-
-    this.card.appendChild(button);
     this.parent.appendChild(this.card);
+  }
+
+  addAddress() {
+    setTimeout(() => {
+      this.header.innerHTML = "";
+      const header = document.createElement("H3");
+
+      header.innerHTML = this.markerData.addresses[this.index].Match_addr;
+      this.header.appendChild(header);
+      this.card.appendChild(this.header);
+    }, 1000);
+  }
+
+  addWeatherData() {
+    setTimeout(() => {
+      this.weatherContainer.innerHTML = "";
+      const weather = this.markerData.weather[this.index].weatherObservation;
+
+      const temp = document.createElement("p");
+      temp.innerHTML = `Temperature: ${weather.temperature}`;
+      const dew = document.createElement("p");
+      dew.innerHTML = `Dew point: ${weather.dewPoint}`;
+      const windSpeed = document.createElement("p");
+      windSpeed.innerHTML = `Wind speed: ${weather.windSpeed}`;
+
+      this.weatherContainer.appendChild(temp);
+      this.weatherContainer.appendChild(dew);
+      this.weatherContainer.appendChild(windSpeed);
+      this.card.appendChild(this.weatherContainer);
+
+      console.log(weather);
+    }, 1000);
+  }
+
+  updateCard() {
+    this.addAddress();
+    this.addWeatherData();
   }
 
   destroyWeatherCard() {

@@ -52,6 +52,7 @@ export class Map {
     this.getWeather(this.markers.latlng[this.index]);
     // Fly to marker
     this.map.flyTo(this.markers.latlng[this.index], 15);
+    return { index: this.index, markerData: this.markers };
   }
 
   markerDrag(e) {
@@ -74,17 +75,14 @@ export class Map {
       .reverse()
       .latlng([lat, lng])
       .run((error, result) => {
-        console.log(result.address);
         this.markers.addresses[this.index] = result.address;
       });
   }
-
   // Get weather for a lat lang and push
   async getWeather(latlng) {
     const weatherData = await fetch(
       `http://api.geonames.org/findNearByWeatherJSON?lat=${latlng.lat}&lng=${latlng.lng}&username=ZAnderson281`
     ).then((data) => data.json());
-    console.log(weatherData);
 
     this.markers.weather[this.index] = weatherData;
   }
