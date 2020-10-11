@@ -103,8 +103,22 @@ class WeatherCard extends Sidebar {
   // Creates the weather card
   createWeatherCard() {
     this.card = document.createElement("DIV");
+
+    // Card Header
     this.header = document.createElement("DIV");
+    this.header.classList.add("weather-card-header");
+
+    // Card Body
     this.weatherContainer = document.createElement("DIV");
+    this.weatherContainer.classList.add("weather-card-body");
+
+    // Card Body Temp
+    this.temperatureContainer = document.createElement("DIV");
+    this.temperatureContainer.classList.add("weather-temp-container");
+
+    // Card Body Other Container
+    this.otherContainer = document.createElement("DIV");
+    this.otherContainer.classList.add("other-data-container");
 
     this.card.classList.add("weather-node");
     this.card.id = this.index;
@@ -130,22 +144,45 @@ class WeatherCard extends Sidebar {
   // a\Adds the weather data to the card
   addWeatherData() {
     setTimeout(() => {
-      this.weatherContainer.innerHTML = "";
+      this.temperatureContainer.innerHTML = "";
+      this.otherContainer.innerHTML = "";
       const weather = this.markerData.weather[this.index].weatherObservation;
 
+      // Tempature container
       const temp = document.createElement("p");
-      temp.innerHTML = `Temperature: ${weather.temperature}`;
-      const hum = document.createElement("p");
-      hum.innerHTML = `Humidity: ${weather.humidity}`;
-      const dew = document.createElement("p");
-      dew.innerHTML = `Dew point: ${weather.dewPoint}`;
-      const windSpeed = document.createElement("p");
-      windSpeed.innerHTML = `Wind speed: ${weather.windSpeed}`;
+      const icon = this.getCorrectIcon(weather);
 
-      this.weatherContainer.appendChild(temp);
-      this.weatherContainer.appendChild(hum);
-      this.weatherContainer.appendChild(dew);
-      this.weatherContainer.appendChild(windSpeed);
+      temp.innerHTML = `
+      <div class='temp-top'>
+      <p>${icon}</p>
+      <p>
+      ${Math.round((weather.temperature * 9) / 5 + 32)}&degF</p>
+      </div>
+      <p class="condition">${
+        weather.weatherCondition !== "n/a" ? weather.weatherCondition : ""
+      }</p>`;
+      this.weatherContainer.appendChild(this.temperatureContainer);
+
+      // Other Container
+      const hum = document.createElement("p");
+      hum.innerHTML = `Humidity: ${weather.humidity}%`;
+      const dew = document.createElement("p");
+      dew.innerHTML = `Dew point: ${
+        Math.round((weather.dewPoint * 9) / 5) + 32
+      } &degF`;
+      const windSpeed = document.createElement("p");
+      windSpeed.innerHTML = `Wind speed: ${Math.round(
+        weather.windSpeed * 1.15078
+      )}mph`;
+
+      this.temperatureContainer.appendChild(temp);
+
+      this.otherContainer.appendChild(hum);
+      this.otherContainer.appendChild(dew);
+      this.otherContainer.appendChild(windSpeed);
+
+      this.weatherContainer.appendChild(this.otherContainer);
+
       this.card.appendChild(this.weatherContainer);
 
       console.log(weather);
@@ -156,6 +193,83 @@ class WeatherCard extends Sidebar {
   updateCard() {
     this.addAddress();
     this.addWeatherData();
+  }
+
+  getCorrectIcon(weatherData) {
+    const sun = `<i class="fas fa-sun"></i>`;
+    // const cloud = `<i class="fas fa-cloud"></i>`;
+    const cloudSun = `<i class="fas fa-cloud-sun"></i>`;
+    const rain = `<i class="fas fa-cloud-rain"></i>`;
+    const snow = `<i class="fas fa-snowflake"></i>`;
+    const wind = '<i class="fas fa-wind"></i>';
+    const cold = `<i class="fas fa-temperature-low"></i>`;
+    const hot = `<i class="fas fa-temperature-high"></i>`;
+
+    const temp = Math.round((weatherData.temperature * 9) / 5 + 32);
+    let clouds;
+    let condition;
+    let tempRes;
+
+    // Cloud Logic
+    if (weatherData.clouds === "n/a") {
+      clouds = false;
+    } else {
+      console.log("clouds", weatherData.clouds);
+      clouds = true;
+    }
+
+    // Temp Logic
+    let tempIconFound = false;
+
+    while (!tempIconFound) {
+      if (temp > 75) {
+        tempRes = "over";
+        tempIconFound = true;
+        break;
+      }
+
+      if (temp <= 10) {
+        tempRes = "below";
+        tempIconFound = true;
+        break;
+      }
+      if (temp <= 40) {
+        tempRes = "cold";
+        tempIconFound = true;
+        break;
+      }
+
+      tempIconFound = true;
+      tempRes = "avg";
+    }
+
+    // Weather Condition
+    if (weatherData.weatherCondition === "n/a") {
+      condition = false;
+    } else {
+      condition = true;
+    }
+
+    // Return Logic
+    if (condition) {
+      return rain;
+    }
+
+    if (clouds && !condition) {
+      return cloudSun;
+    }
+    if (!clouds && !condition && tempRes === "avg") {
+      return sun;
+    }
+    if (!clouds && !condition && tempRes == "cold") {
+      return cold;
+    }
+    if (!clouds && !condition && tempRes == "over") {
+      return hot;
+    }
+    if (!clouds && !condition && tempRes == "below") {
+      return sun;
+    }
   }
 
   // Destroys the weather card
