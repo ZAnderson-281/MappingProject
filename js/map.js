@@ -9,6 +9,7 @@ export class Map {
 
     // Marker object and collectors
     this.index = 0;
+    this.location;
     this.markers = {
       defaultLatLong: this.map.getCenter(),
       markers: [],
@@ -44,7 +45,8 @@ export class Map {
     })
       .addTo(this.map)
       .on("dragend", this.markerDrag.bind(this))
-      .on("click", this.markerClick.bind(this));
+      .on("click", this.markerClick.bind(this))
+      .bindPopup(`<label>Distance</label><input type="checkbox"></input>`);
 
     // Push marker instance
     this.markers.markers.push(marker);
@@ -71,8 +73,9 @@ export class Map {
 
   markerClick(e) {
     this.index = this.markers.markers.indexOf(e.target);
-    this.getAddress(e.target._latlng);
-    this.getWeather(e.target._latlng);
+    // this.getAddress(e.target._latlng);
+    // this.getWeather(e.target._latlng);
+    e.target.openPopup;
   }
 
   // Sets the address information

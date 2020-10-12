@@ -15,7 +15,12 @@ const bindClickEvents = (sidebarInstance) => {
       "click",
       sidebarInstance.handleViewLocations.bind(sidebarInstance)
     );
-
+  document
+    .querySelector("#currentLocation")
+    .addEventListener(
+      "click",
+      sidebarInstance.setCurrentLocation.bind(sidebarInstance)
+    );
   document
     .querySelector("#zipCodeForm")
     .addEventListener(

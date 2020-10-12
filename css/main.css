@@ -40,6 +40,12 @@ i {
   color: white;
 }
 
+.my-div-icon {
+  background-color: rgb(4, 146, 182);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
 #map {
   width: 92%;
   height: 100%;

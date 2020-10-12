@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1.0"
+    />
     <title>Map API Project</title>
     <link
       rel="stylesheet"
@@ -24,12 +27,18 @@
       <div class="sidebar">
         <div id="zipCodeForm" class="sidebar-btn">
           <h3>#</h3>
+          <p>Search Zip</p>
         </div>
-        <div id="addMarker" class="sidebar-btn tooltip">
-          <i class="fas fa-map-marker-alt"></i>
+        <div id="addMarker" class="sidebar-btn">
+          <p><i class="fas fa-map-marker-alt"></i></p>
+          <p>Add Marker</p>
+        </div>
+        <div id="currentLocation" class="sidebar-btn">
+          <p><i class="fas fa-search-location"></i></p>
+          <p>Current Location</p>
         </div>
         <div id="listWeatherLocations" class="sidebar-btn">
-          <h3><i class="fas fa-angle-double-right"></i></h3>
+          <h3>Locations<i class="fas fa-angle-double-right"></i></h3>
         </div>
       </div>
 
@@ -51,11 +60,7 @@
       </div>
 
       <div id="weatherForm" class="weather-container">
-        <div class="location-container">
-          <!-- <div class="weather-node">
-            <h1>Weather Node</h1>
-          </div> -->
-        </div>
+        <div class="location-container"></div>
       </div>
     </div>
 

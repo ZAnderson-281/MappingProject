@@ -51,6 +51,30 @@ export class Sidebar {
     }
   }
 
+  setCurrentLocation() {
+    const getPositionOptions = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      this.createCurrentPositionMarker.bind(this),
+      this.handleCurrentPositionError,
+      getPositionOptions
+    );
+  }
+
+  createCurrentPositionMarker(pos) {
+    const lat = pos.coords.latitude;
+    const long = pos.coords.longitude;
+    const markerData = this._mapInstance.addMarker([lat, long]);
+    this.createWeatherCard(markerData);
+  }
+  handleCurrentPositionError(error) {
+    console.log(error);
+  }
+
   // Handles the addition of a zipcodeless marker
   handleAddMarker() {
     const markerData = this._mapInstance.addMarker(0);
