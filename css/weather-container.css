@@ -37,7 +37,7 @@
   flex-direction: column;
 
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 
   margin: 0.3rem;
   margin-right: 1rem;
@@ -126,4 +126,30 @@
   margin: 0rem 1rem;
   font-size: 3rem;
   color: rgb(255, 67, 67);
+}
+
+/* On screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .weather-container {
+    height: 150px;
+    width: 100%;
+    bottom: 12%;
+    left: 0%;
+  }
+  .weather-node {
+    min-width: 100%;
+  }
+}
+
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .weather-container {
+    height: 150px;
+    width: 100%;
+    bottom: 12%;
+    left: 0%;
+  }
+  .weather-node {
+    min-width: 100%;
+  }
 }

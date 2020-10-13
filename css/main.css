@@ -3,7 +3,9 @@
   padding: 0rem;
   margin: 0rem;
 }
-
+body {
+  background-color: rgb(134, 182, 221);
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -14,6 +16,7 @@
 
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 .btn {
   border: none;
@@ -50,4 +53,51 @@ i {
   width: 92%;
   height: 100%;
   z-index: 1;
+}
+
+/* On screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .container {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    top: 0px;
+  }
+  hr {
+    display: none;
+  }
+  #map {
+    width: 100%;
+    height: 88%;
+  }
+  input[type="text"] {
+    height: 30%;
+    padding: 0.5rem;
+    width: 60%;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+  }
+}
+
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .container {
+    flex-direction: column-reverse;
+  }
+  hr {
+    display: none;
+  }
+  #map {
+    top: 0px;
+    width: 100%;
+    height: 88%;
+  }
+  input[type="text"] {
+    height: 30%;
+    padding: 0.5rem;
+    width: 60%;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+  }
 }
