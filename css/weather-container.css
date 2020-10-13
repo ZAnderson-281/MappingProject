@@ -6,22 +6,23 @@
   z-index: 100;
 
   display: none;
-  flex-direction: column;
+  flex-direction: row;
 
   width: 92%;
   height: 200px;
 
-  color: white;
   background-color: #c9c9c9b7;
 }
 
 .location-container {
   display: flex;
+  flex-direction: row;
   flex-wrap: nowrap;
+
   align-items: center;
+
   overflow-x: scroll;
-  box-sizing: border-box;
-  height: fit-content;
+
   padding: 0rem 1rem;
   width: 100%;
   height: 100%;
@@ -34,51 +35,50 @@
 .weather-node {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-content: center;
+
+  justify-content: center;
+  align-items: center;
 
   margin: 0.3rem;
   margin-right: 1rem;
 
-  box-sizing: border-box;
   height: 90%;
-  min-width: 25%;
+  min-width: 43%;
 
   border-radius: 10px;
   color: black;
   background-color: white;
 }
 
+.weather-card-body p {
+  width: fit-content;
+}
 .weather-card-header {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: no-wrap;
   flex-direction: column;
   align-items: center;
 
   padding: 0.5rem;
   color: rgb(0, 0, 0);
-  /* background-color: blue; */
 }
 .weather-card-body {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  align-items: flex-start;
+  align-items: center;
   padding: 0.5rem;
   height: 100%;
-  /* background-color: violet; */
 }
 
 .weather-temp-container {
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: space-evenly;
   align-items: center;
   text-align: center;
   font-size: 2rem;
-
-  height: 100%;
-  width: 100%;
 }
 
 .temp-top {
@@ -96,9 +96,6 @@
   align-items: flex-start;
   font-size: 1.1rem;
   padding: 0rem 1rem;
-
-  height: 100%;
-  width: 100%;
 }
 
 .condition {

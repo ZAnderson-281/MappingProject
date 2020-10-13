@@ -5,9 +5,16 @@ export class Sidebar {
     this.htmlNodes = {
       listWeather: document.querySelector("#weatherForm"),
       zipEntry: document.querySelector("#zipForm"),
+
+      layerEntry: [
+        document.querySelector("#sat"),
+        document.querySelector("#reg"),
+      ],
+
       active: {
         zipEntry: false,
         listWeather: false,
+        layerEntry: "reg",
       },
       weatherCard: {
         weatherCardInstances: [],
@@ -51,6 +58,25 @@ export class Sidebar {
     }
   }
 
+  handleSelectLayer() {
+    console.log("ran");
+    if (this.htmlNodes.active.layerEntry === "reg") {
+      document.querySelector(".sat-map").style.display = "none";
+      document.querySelector(".regular-map").style.display = "flex";
+
+      this._mapInstance.changeToSatalite.bind(this._mapInstance);
+      this._mapInstance.changeToSatalite();
+      this.htmlNodes.active.layerEntry = "sat";
+    } else {
+      document.querySelector(".regular-map").style.display = "none";
+      document.querySelector(".sat-map").style.display = "flex";
+
+      this._mapInstance.changeToRegular.bind(this._mapInstance);
+      this._mapInstance.changeToRegular();
+      this.htmlNodes.active.layerEntry = "reg";
+    }
+  }
+
   setCurrentLocation() {
     const getPositionOptions = {
       enableHighAccuracy: true,
@@ -74,7 +100,6 @@ export class Sidebar {
   handleCurrentPositionError(error) {
     console.log(error);
   }
-
   // Handles the addition of a zipcodeless marker
   handleAddMarker() {
     const markerData = this._mapInstance.addMarker(0);
@@ -88,7 +113,6 @@ export class Sidebar {
     const zipcodeConverted = await this._mapInstance.convertZipCode(zipcode);
 
     const markerData = await this._mapInstance.addMarker(zipcodeConverted);
-    console.log(markerData);
     this.createWeatherCard(markerData);
   }
 
@@ -96,7 +120,12 @@ export class Sidebar {
   handleMarkerUpdate(event) {
     const map = document.querySelector("#map");
     if (map.contains(event.target)) {
-      if (event.target.classList.contains("leaflet-marker-icon")) {
+      if (
+        event.target.classList.contains("leaflet-marker-icon") &&
+        typeof this.htmlNodes.weatherCard.weatherCardInstances[
+          event.target.id
+        ] != "undefined"
+      ) {
         this.htmlNodes.weatherCard.weatherCardInstances[
           event.target.id
         ].updateCard();
@@ -188,28 +217,26 @@ class WeatherCard extends Sidebar {
       this.weatherContainer.appendChild(this.temperatureContainer);
 
       // Other Container
-      const hum = document.createElement("p");
-      hum.innerHTML = `Humidity: ${weather.humidity}%`;
-      const dew = document.createElement("p");
-      dew.innerHTML = `Dew point: ${
-        Math.round((weather.dewPoint * 9) / 5) + 32
-      } &degF`;
-      const windSpeed = document.createElement("p");
-      windSpeed.innerHTML = `Wind speed: ${Math.round(
+      const hum = document.createElement("DIV");
+      hum.innerHTML = `<p>Humidity: <strong>${weather.humidity}%</strong></p>`;
+      // const dew = document.createElement("p");
+      // dew.innerHTML = `Dew point: ${
+      //   Math.round((weather.dewPoint * 9) / 5) + 32
+      // } &degF`;
+      const windSpeed = document.createElement("DIV");
+      windSpeed.innerHTML = `<p>Wind speed:<strong> ${Math.round(
         weather.windSpeed * 1.15078
-      )}mph`;
+      )}mph</strong></p>`;
 
       this.temperatureContainer.appendChild(temp);
 
       this.otherContainer.appendChild(hum);
-      this.otherContainer.appendChild(dew);
+      // this.otherContainer.appendChild(dew);
       this.otherContainer.appendChild(windSpeed);
 
       this.weatherContainer.appendChild(this.otherContainer);
 
       this.card.appendChild(this.weatherContainer);
-
-      console.log(weather);
     }, 1000);
   }
 
@@ -221,13 +248,13 @@ class WeatherCard extends Sidebar {
 
   getCorrectIcon(weatherData) {
     const sun = `<i class="fas fa-sun"></i>`;
-    // const cloud = `<i class="fas fa-cloud"></i>`;
     const cloudSun = `<i class="fas fa-cloud-sun"></i>`;
     const rain = `<i class="fas fa-cloud-rain"></i>`;
-    const snow = `<i class="fas fa-snowflake"></i>`;
-    const wind = '<i class="fas fa-wind"></i>';
     const cold = `<i class="fas fa-temperature-low"></i>`;
     const hot = `<i class="fas fa-temperature-high"></i>`;
+    // const cloud = `<i class="fas fa-cloud"></i>`;
+    // const snow = `<i class="fas fa-snowflake"></i>`;
+    // const wind = '<i class="fas fa-wind"></i>';
 
     const temp = Math.round((weatherData.temperature * 9) / 5 + 32);
     let clouds;
@@ -238,7 +265,6 @@ class WeatherCard extends Sidebar {
     if (weatherData.clouds === "n/a") {
       clouds = false;
     } else {
-      console.log("clouds", weatherData.clouds);
       clouds = true;
     }
 
@@ -292,7 +318,7 @@ class WeatherCard extends Sidebar {
       return hot;
     }
     if (!clouds && !condition && tempRes == "below") {
-      return sun;
+      return cold;
     }
   }
 

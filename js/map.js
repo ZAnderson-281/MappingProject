@@ -1,7 +1,7 @@
 export class Map {
   constructor() {
     // Leaflet
-    this.map = L.map("map");
+    this.map = L.map("map", { zoomControl: false });
     this.geocodeService = new L.esri.Geocoding.geocodeService();
 
     // On creation create map instance
@@ -24,10 +24,24 @@ export class Map {
     this.map.setView([37.9643, -91.8318], 4);
     this.map.on("zoomend", this.updateMapCenter.bind(this));
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.map);
+    this.satLayer = L.tileLayer(
+      "https://api.mapbox.com/styles/v1/zanderson-281/ckg71msre000u19pd0dx5vif3/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiemFuZGVyc29uLTI4MSIsImEiOiJjazczbnlnbHAwMGFwM2xvMHoxZjVwMTRmIn0.m72FirorTgWCs4FTxk6ZRQ",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }
+    );
+
+    this.regLayer = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }
+    );
+
+    console.log(this.map);
+    this.map.addLayer(this.regLayer);
   }
 
   // After a zoom is compleated or halted recalculate the map center
@@ -46,7 +60,7 @@ export class Map {
       .addTo(this.map)
       .on("dragend", this.markerDrag.bind(this))
       .on("click", this.markerClick.bind(this))
-      .bindPopup(`<label>Distance</label><input type="checkbox"></input>`);
+      .bindPopup(`marker`);
 
     // Push marker instance
     this.markers.markers.push(marker);
@@ -73,9 +87,25 @@ export class Map {
 
   markerClick(e) {
     this.index = this.markers.markers.indexOf(e.target);
-    // this.getAddress(e.target._latlng);
-    // this.getWeather(e.target._latlng);
     e.target.openPopup;
+  }
+
+  changeToSatalite() {
+    this.map.removeLayer(this.regLayer);
+    L.tileLayer(
+      "https://api.mapbox.com/styles/v1/zanderson-281/ckg71msre000u19pd0dx5vif3/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiemFuZGVyc29uLTI4MSIsImEiOiJjazczbnlnbHAwMGFwM2xvMHoxZjVwMTRmIn0.m72FirorTgWCs4FTxk6ZRQ",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }
+    ).addTo(this.map);
+  }
+  changeToRegular() {
+    this.map.removeLayer(this.satLayer);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(this.map);
   }
 
   // Sets the address information
@@ -109,9 +139,5 @@ export class Map {
     };
 
     return latlng;
-  }
-
-  get getMarkerData() {
-    return this.markers;
   }
 }
