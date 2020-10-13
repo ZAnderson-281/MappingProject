@@ -26,30 +26,37 @@
   <body>
     <div class="container">
       <div class="sidebar">
+        <!-- Toggle Map View -->
+        <div id="selectMapLayer" class="sidebar-btn">
+          <div class="sat-map">
+            <p><i class="fas fa-map"></i> Satalite</p>
+          </div>
+          <div class="regular-map">
+            <p><i class="fas fa-map"></i> Street</p>
+          </div>
+        </div>
+
+        <hr />
+
         <div id="zipCodeForm" class="sidebar-btn">
           <h3>#</h3>
           <p>Search Zip</p>
         </div>
+        <hr />
+
         <div id="addMarker" class="sidebar-btn">
           <p><i class="fas fa-map-marker-alt"></i></p>
           <p>Add Marker</p>
         </div>
+
         <div id="currentLocation" class="sidebar-btn">
           <p><i class="fas fa-search-location"></i></p>
           <p>Current Location</p>
         </div>
-        <div id="selectMapLayer" class="sidebar-btn">
-          <div class="sat-map">
-            <p><i class="fas fa-map"></i> Satalite</p>
-            <!-- <p>Satalite</p> -->
-          </div>
-          <div class="regular-map">
-            <p><i class="fas fa-map"></i> Street</p>
-            <!-- <p>Street</p> -->
-          </div>
-        </div>
+
         <div id="listWeatherLocations" class="sidebar-btn">
-          <h3>Locations<i class="fas fa-angle-double-right"></i></h3>
+          <p><strong>Locations</strong></p>
+          <p><i class="fas fa-angle-double-right"></i></p>
         </div>
       </div>
 

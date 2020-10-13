@@ -59,8 +59,7 @@ export class Map {
     })
       .addTo(this.map)
       .on("dragend", this.markerDrag.bind(this))
-      .on("click", this.markerClick.bind(this))
-      .bindPopup(`marker`);
+      .on("click", this.markerClick.bind(this));
 
     // Push marker instance
     this.markers.markers.push(marker);
@@ -74,9 +73,17 @@ export class Map {
     this.getAddress(this.markers.latlng[this.index]);
     // Get weather Information
     this.getWeather(this.markers.latlng[this.index]);
+    //bind popup
+    setTimeout(this.addMarkerPopup.bind(this), 2000);
     // Fly to marker
     this.map.flyTo(this.markers.latlng[this.index], 15);
     return { index: this.index, markerData: this.markers };
+  }
+
+  addMarkerPopup() {
+    const marker = this.markers.markers[this.index];
+    const addr = this.markers.addresses[this.index].Match_addr;
+    marker.bindPopup(addr).openPopup();
   }
 
   markerDrag(e) {
@@ -100,6 +107,7 @@ export class Map {
       }
     ).addTo(this.map);
   }
+
   changeToRegular() {
     this.map.removeLayer(this.satLayer);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -122,7 +130,7 @@ export class Map {
   // Get weather for a lat lang and push
   async getWeather(latlng) {
     const weatherData = await fetch(
-      `http://api.geonames.org/findNearByWeatherJSON?lat=${latlng.lat}&lng=${latlng.lng}&username=ZAnderson281`
+      `https://secure.geonames.org/findNearByWeatherJSON?lat=${latlng.lat}&lng=${latlng.lng}&username=ZAnderson281`
     ).then((data) => data.json());
 
     this.markers.weather[this.index] = weatherData;
@@ -130,7 +138,7 @@ export class Map {
 
   async convertZipCode(zipCode) {
     const zipCodeData = await fetch(
-      `http://api.geonames.org/postalCodeLookupJSON?postalcode=${zipCode}&country=US&username=ZAnderson281`
+      `https://secure.geonames.org/postalCodeLookupJSON?postalcode=${zipCode}&country=US&username=ZAnderson281`
     ).then((data) => data.json());
 
     const latlng = {

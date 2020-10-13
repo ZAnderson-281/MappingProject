@@ -22,6 +22,9 @@ export class Sidebar {
     };
 
     document.body.addEventListener("click", this.handleMarkerUpdate.bind(this));
+    document
+      .querySelector("#map")
+      .addEventListener("click", this.hideViewLocation.bind(this));
   }
 
   // Handles the toggleing of the zip code entry form
@@ -57,9 +60,15 @@ export class Sidebar {
       this.htmlNodes.active.listWeather = false;
     }
   }
+  hideViewLocation() {
+    document
+      .querySelector("#listWeatherLocations")
+      .classList.remove("sidebar-btn-select");
+    this.htmlNodes.listWeather.style.display = "none";
+    this.htmlNodes.active.listWeather = false;
+  }
 
   handleSelectLayer() {
-    console.log("ran");
     if (this.htmlNodes.active.layerEntry === "reg") {
       document.querySelector(".sat-map").style.display = "none";
       document.querySelector(".regular-map").style.display = "flex";
@@ -97,9 +106,11 @@ export class Sidebar {
     const markerData = this._mapInstance.addMarker([lat, long]);
     this.createWeatherCard(markerData);
   }
+
   handleCurrentPositionError(error) {
     console.log(error);
   }
+
   // Handles the addition of a zipcodeless marker
   handleAddMarker() {
     const markerData = this._mapInstance.addMarker(0);
